@@ -1,35 +1,59 @@
 import path from "path";
-import { defineConfig } from "vite";
+import { defineConfig, LibraryFormats } from "vite";
 import packageJson from "./package.json";
+import visualizer from 'rollup-plugin-visualizer';
 
-const getPackageName = () => {
-  return packageJson.name;
+
+type FileName = {
+  es: string;
+  cjs: string;
+  iife: string;
+  umd: string;
 };
+
+const getPackageName = () => packageJson.name;
 
 const getPackageNameCamelCase = () => {
-  try {
-    return getPackageName().replace(/-./g, (char) => char[1].toUpperCase());
-  } catch (err) {
+  const name = getPackageName();
+  if (!name) {
     throw new Error("Name property in package.json is missing.");
   }
+  return name.replace(/-./g, (char) => char[1].toUpperCase());
 };
 
-const fileName = {
+const fileName: FileName = {
   es: `${getPackageName()}.mjs`,
   cjs: `${getPackageName()}.cjs`,
   iife: `${getPackageName()}.iife.js`,
-};
+  umd: `${getPackageName()}.umd.js`
+} as const;
 
-const formats = Object.keys(fileName) as Array<keyof typeof fileName>;
+const formats: LibraryFormats[] = ["es", "cjs", "iife", "umd"];
 
-module.exports = defineConfig({
+
+export default defineConfig({
   base: "./",
+  plugins: [visualizer({
+    open: true, // Open the generated HTML graph in the default browser
+    gzipSize: true, // Show gzip-compressed sizes
+  })],
   build: {
     lib: {
       entry: path.resolve(__dirname, "src/index.ts"),
       name: getPackageNameCamelCase(),
       formats,
+     // @ts-ignore
       fileName: (format) => fileName[format],
     },
+    rollupOptions: {
+      external: ["@oc-tech/lodash-ext"],
+      output: {
+        manualChunks: undefined,
+        globals: {
+          // 'lodashExt' is the guessed name; replace it with the correct name
+          '@oc-tech/lodash-ext': 'oc-tech-lodash-ext'
+        },
+      },
+    }
   },
 });

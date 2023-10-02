@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FormWithConditionals ignores unexpected props 1`] = `<span />`;
+
+exports[`FormWithConditionals ignores unexpected props 2`] = `<span />`;

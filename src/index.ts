@@ -1,3 +1,3 @@
-import "./style.css"
+import { capitalize } from '@oc-tech/lodash-ext'
 
-export { sum } from "./sum"
+export const greet = (name: string): string => capitalize(`hello ${name}`)
