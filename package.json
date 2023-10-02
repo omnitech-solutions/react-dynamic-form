@@ -45,5 +45,13 @@
     "ts-node": "^10.9.1",
     "typescript": "^5.2.2",
     "vite": "^4.4.9"
+  },
+  "dependencies": {
+    "@rjsf/antd": "^5.13.0",
+    "@rjsf/core": "^5.13.0",
+    "@rjsf/utils": "^5.13.0",
+    "@rjsf/validator-ajv8": "^5.13.0",
+    "antd": "^5.9.4",
+    "dayjs": "^1.11.10"
   }
 }
